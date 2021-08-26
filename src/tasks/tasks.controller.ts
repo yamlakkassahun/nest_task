@@ -1,6 +1,17 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { filter } from 'rxjs';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { Task } from './task.model';
+import { GetTasksFilteringDto } from './dto/get-tasks-filter.dto';
+import { Task, TaskStatus } from './task.model';
 import { TasksService } from './tasks.service';
 
 @Controller('tasks')
@@ -9,8 +20,14 @@ export class TasksController {
 
   //this is to add more type safe
   @Get()
-  getAllTasks(): Task[] {
-    return this.tasksService.getAllTasks();
+  getTasks(@Query() filerDto: GetTasksFilteringDto): Task[] {
+    //if we have any filters define, call taskService.getTasksWilFilters
+    //otherwise, just get all tasks
+    if (Object.keys(filerDto).length) {
+      return this.tasksService.getTasksWithFilters(filerDto);
+    } else {
+      return this.tasksService.getAllTasks();
+    }
   }
 
   //this will get task by Id
@@ -27,5 +44,13 @@ export class TasksController {
   @Delete('/:id')
   deleteTask(@Param('id') id: string): void {
     return this.tasksService.deleteTask(id);
+  }
+
+  @Patch('/:id/status')
+  updateTaskStatus(
+    @Param('id') id: string,
+    @Body('status') status: TaskStatus,
+  ): Task {
+    return this.tasksService.updateTaskStatus(id, status);
   }
 }
