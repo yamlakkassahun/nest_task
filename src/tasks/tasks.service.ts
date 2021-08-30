@@ -66,6 +66,8 @@ export class TasksService {
   }
 
   deleteTask(id: string): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const task = this.getTaskById(id);
     this.tasks = this.tasks.filter((task) => task.id !== id);
   }
 }
