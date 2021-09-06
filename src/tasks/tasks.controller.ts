@@ -19,16 +19,12 @@ export class TasksController {
   constructor(private tasksService: TasksService) {}
 
   // //this is to add more type safe
-  // @Get()
-  // getTasks(@Query() filerDto: GetTasksFilteringDto): Task[] {
-  //   //if we have any filters define, call taskService.getTasksWilFilters
-  //   //otherwise, just get all tasks
-  //   if (Object.keys(filerDto).length) {
-  //     return this.tasksService.getTasksWithFilters(filerDto);
-  //   } else {
-  //     return this.tasksService.getAllTasks();
-  //   }
-  // }
+  @Get()
+  getTasks(@Query() filerDto: GetTasksFilteringDto): Promise<Task[]> {
+    //if we have any filters define, call taskService.getTasksWilFilters
+    //otherwise, just get all tasks
+    return this.tasksService.getTasks(filerDto);
+  }
 
   //this will get task by Id
   @Get('/:id')
