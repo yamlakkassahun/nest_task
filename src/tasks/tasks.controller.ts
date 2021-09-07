@@ -22,7 +22,7 @@ import { TasksService } from './tasks.service';
 export class TasksController {
   constructor(private tasksService: TasksService) {}
 
-  // //this is to add more type safe
+  //this is to add more type safe
   @Get()
   getTasks(@Query() filerDto: GetTasksFilteringDto): Promise<Task[]> {
     //if we have any filters define, call taskService.getTasksWilFilters
