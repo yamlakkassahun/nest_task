@@ -3,10 +3,24 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UsersRepository])],
-  providers: [AuthService],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.register({
+      secret: 'topSecret51',
+      signOptions: {
+        expiresIn: 3600,
+      },
+    }),
+    TypeOrmModule.forFeature([UsersRepository]),
+  ],
+  providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
+  //this will allow the other modules to import and use this module
+  exports: [JwtStrategy, PassportModule],
 })
 export class AuthModule {}
