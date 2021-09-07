@@ -8,10 +8,12 @@ import { Task } from './task.entity';
 //the repository will tack the decorator entityRepository and tack entity
 @EntityRepository(Task)
 export class TasksRepository extends Repository<Task> {
-  async getTasks(filterDto: GetTasksFilteringDto): Promise<Task[]> {
+  async getTasks(filterDto: GetTasksFilteringDto, user: User): Promise<Task[]> {
     const { status, search } = filterDto;
 
     const query = this.createQueryBuilder('task');
+    //this will add anther level of filleter to get a specific task that is added ny the specific user
+    query.andWhere({ user });
 
     //this will let us build our own query using conditional statements
     if (status) {
@@ -20,7 +22,7 @@ export class TasksRepository extends Repository<Task> {
 
     if (search) {
       query.andWhere(
-        'task.title LIKE :search OR task.description LIKE :search',
+        '(task.title LIKE :search OR task.description LIKE :search)',
         { search: `%${search.toLowerCase()}%` },
       );
     }

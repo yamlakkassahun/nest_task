@@ -26,16 +26,19 @@ export class TasksController {
 
   //this is to add more type safe
   @Get()
-  getTasks(@Query() filerDto: GetTasksFilteringDto): Promise<Task[]> {
+  getTasks(
+    @Query() filerDto: GetTasksFilteringDto,
+    @GetUser() user: User,
+  ): Promise<Task[]> {
     //if we have any filters define, call taskService.getTasksWilFilters
     //otherwise, just get all tasks
-    return this.tasksService.getTasks(filerDto);
+    return this.tasksService.getTasks(filerDto, user);
   }
 
   //this will get task by Id
   @Get('/:id')
-  getTaskById(@Param('id') id: string): Promise<Task> {
-    return this.tasksService.getTaskById(id);
+  getTaskById(@Param('id') id: string, @GetUser() user: User): Promise<Task> {
+    return this.tasksService.getTaskById(id, user);
   }
 
   @Post()
@@ -48,16 +51,18 @@ export class TasksController {
   }
 
   @Delete('/:id')
-  deleteTask(@Param('id') id: string): Promise<void> {
-    return this.tasksService.deleteTask(id);
+  deleteTask(@Param('id') id: string, @GetUser() user: User): Promise<void> {
+    return this.tasksService.deleteTask(id, user);
   }
 
   @Patch('/:id/status')
   updateTaskStatus(
     @Param('id') id: string,
     @Body() updateTaskStatusDto: UpdateTaskStatusDto,
+    //with this decorator we will have the user from the request hadar
+    @GetUser() user: User,
   ): Promise<Task> {
     const { status } = updateTaskStatusDto;
-    return this.tasksService.updateTaskStatus(id, status);
+    return this.tasksService.updateTaskStatus(id, status, user);
   }
 }
