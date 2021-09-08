@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 import {
   Body,
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -22,7 +24,9 @@ import { TasksService } from './tasks.service';
 //to protect the entire route we can use the auth gard like this
 @UseGuards(AuthGuard())
 export class TasksController {
-  constructor(private tasksService: TasksService) {}
+  //every time we all the logger it needs a context to reference 
+  private logger = new Logger('TasksController');
+  constructor(private tasksService: TasksService) { }
 
   //this is to add more type safe
   @Get()
@@ -30,6 +34,7 @@ export class TasksController {
     @Query() filerDto: GetTasksFilteringDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
+    this.logger.verbose(`User "${user.username}" retrieving all Tasks. Filters: ${JSON.stringify(filerDto)}`);
     //if we have any filters define, call taskService.getTasksWilFilters
     //otherwise, just get all tasks
     return this.tasksService.getTasks(filerDto, user);
@@ -47,6 +52,7 @@ export class TasksController {
     //with this decorator we will have the user from the request hadar
     @GetUser() user: User,
   ): Promise<Task> {
+    this.logger.verbose(`User "${user.username}" retrieving all Tasks. Task: ${JSON.stringify(createTaskDto)}`);
     return this.tasksService.createTask(createTaskDto, user);
   }
 
