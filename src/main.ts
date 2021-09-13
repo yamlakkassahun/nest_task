@@ -7,6 +7,7 @@ import { TransformInterceptor } from './transform.interceptor';
 async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
+  //this will allow as to pass the cors policy
   app.enableCors();
   //this is application level validation pipe
   app.useGlobalPipes(new ValidationPipe());
