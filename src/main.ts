@@ -12,7 +12,7 @@ async function bootstrap() {
   //this is application level validation pipe
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
-  await app.listen(3000);
+  await app.listen(process.env.PORT || 3000);
   logger.log(`Application learning on port 3000`);
 }
 bootstrap();
