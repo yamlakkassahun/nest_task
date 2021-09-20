@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 import { InternalServerErrorException, Logger } from '@nestjs/common';
 import { throws } from 'assert';
-import { User } from 'src/auth/user.entity';
+import { User } from '../auth/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilteringDto } from './dto/get-tasks-filter.dto';
